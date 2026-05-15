@@ -9,6 +9,7 @@
       --bg: #f3f4f6;
       --card: #ffffff;
       --text: #1f2937;
+      --hero-text: #1f2937;
       --accent: #2563eb;
       --border: #d1d5db;
       --success: #166534;
@@ -41,6 +42,10 @@
       max-width: 1100px;
       margin: 0 auto;
       padding: 20px;
+    }
+
+    .page-intro {
+      color: var(--hero-text);
     }
 
     h1 {
@@ -194,8 +199,10 @@
 </head>
 <body>
   <div class="container">
-    <h1>Toimivad JavaScripti ülesanded</h1>
-    <p>Iga plokk teeb päriselt midagi. Kõik on ühel lehel, et katsetamine oleks lihtne.</p>
+    <div class="page-intro">
+      <h1>Toimivad JavaScripti ülesanded</h1>
+      <p>Iga plokk teeb päriselt midagi. Kõik on ühel lehel, et katsetamine oleks lihtne.</p>
+    </div>
 
     <div class="grid">
       <section class="card">
@@ -380,6 +387,16 @@
       return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
     }
 
+    function getContrastColor(hexColor) {
+      const hex = hexColor.replace("#", "");
+      const red = parseInt(hex.substring(0, 2), 16);
+      const green = parseInt(hex.substring(2, 4), 16);
+      const blue = parseInt(hex.substring(4, 6), 16);
+      const brightness = (red * 299 + green * 587 + blue * 114) / 1000;
+
+      return brightness > 150 ? "#111827" : "#f9fafb";
+    }
+
     function setResult(id, text, isError) {
       const element = document.querySelector(id);
       element.textContent = text;
@@ -495,10 +512,12 @@
       const savedTheme = localStorage.getItem("theme") || "light";
       const savedColor = localStorage.getItem("bgColor") || "#f3f4f6";
       const savedFontSize = localStorage.getItem("fontSize") || "16";
+      const heroTextColor = getContrastColor(savedColor);
 
       document.body.classList.toggle("dark", savedTheme === "dark");
       document.body.style.backgroundColor = savedColor;
       document.body.style.fontSize = savedFontSize + "px";
+      document.documentElement.style.setProperty("--hero-text", heroTextColor);
 
       document.querySelector("#themeSelect").value = savedTheme;
       document.querySelector("#bgColorInput").value = savedColor;
