@@ -1,0 +1,22 @@
+{
+  "users": [
+    "Mari",
+    "Juri",
+    "Kati"
+  ],
+  "products": [
+    { "name": "Klaviatuur", "price": 35, "category": "Tehnika" },
+    { "name": "Hiir", "price": 18, "category": "Tehnika" },
+    { "name": "JavaScripti raamat", "price": 22, "category": "Raamat" }
+  ],
+  "news": [
+    "Koolis algas JavaScripti nadal.",
+    "Opilased tegid esimese fetch() harjutuse.",
+    "To-do list salvestab nuud andmeid localStorage'isse."
+  ],
+  "books": [
+    { "title": "Eloquent JavaScript", "genre": "Opperaamat" },
+    { "title": "You Don't Know JS", "genre": "Opperaamat" },
+    { "title": "Clean Code", "genre": "Arendus" }
+  ]
+}

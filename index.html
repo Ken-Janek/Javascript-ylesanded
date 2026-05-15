@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toimivad JavaScripti ülesanded</title>
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --text: #1f2937;
+      --accent: #2563eb;
+      --border: #d1d5db;
+      --success: #166534;
+      --error: #b91c1c;
+    }
+
+    body.dark {
+      --bg: #111827;
+      --card: #1f2937;
+      --text: #f9fafb;
+      --accent: #60a5fa;
+      --border: #374151;
+      --success: #86efac;
+      --error: #fca5a5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    label,
+    input,
+    select,
+    button,
+    textarea {
+      display: block;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    input,
+    select,
+    button,
+    textarea {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font: inherit;
+    }
+
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.92;
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .row > * {
+      flex: 1;
+    }
+
+    .result,
+    .message {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(37, 99, 235, 0.08);
+    }
+
+    .error {
+      color: var(--error);
+    }
+
+    .success {
+      color: var(--success);
+    }
+
+    .gallery-main {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .thumbs {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .thumbs img {
+      width: 70px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    .thumbs img.active {
+      border-color: var(--accent);
+    }
+
+    ul.clean {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0 0;
+    }
+
+    ul.clean li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    li.done span {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .hidden-text {
+      transition: opacity 0.3s ease, max-height 0.3s ease;
+      opacity: 1;
+      max-height: 100px;
+      overflow: hidden;
+    }
+
+    .hidden-text.is-hidden {
+      opacity: 0;
+      max-height: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Toimivad JavaScripti ülesanded</h1>
+    <p>Iga plokk teeb päriselt midagi. Kõik on ühel lehel, et katsetamine oleks lihtne.</p>
+
+    <div class="grid">
+      <section class="card">
+        <h2>1. Tervitaja</h2>
+        <label for="nameInput">Sinu nimi</label>
+        <input id="nameInput" type="text" placeholder="Sisesta nimi">
+        <button id="greetButton">Tervita</button>
+        <div id="greetResult" class="result"></div>
+      </section>
+
+      <section class="card">
+        <h2>2. Kalkulaator</h2>
+        <div class="row">
+          <input id="calcA" type="number" placeholder="Esimene arv">
+          <input id="calcB" type="number" placeholder="Teine arv">
+        </div>
+        <select id="calcOperation">
+          <option value="+">Liitmine</option>
+          <option value="-">Lahutamine</option>
+          <option value="*">Korrutamine</option>
+          <option value="/">Jagamine</option>
+        </select>
+        <button id="calcButton">Arvuta</button>
+        <div id="calcResult" class="result"></div>
+      </section>
+
+      <section class="card">
+        <h2>3. Parooli tugevus</h2>
+        <input id="passwordInput" type="password" placeholder="Sisesta parool">
+        <div id="passwordResult" class="result"></div>
+      </section>
+
+      <section class="card">
+        <h2>4. Registreerimisvorm</h2>
+        <form id="registerForm">
+          <input id="regName" type="text" placeholder="Nimi">
+          <input id="regEmail" type="text" placeholder="E-post">
+          <input id="regAge" type="number" placeholder="Vanus">
+          <input id="regPassword" type="password" placeholder="Parool">
+          <input id="regPasswordRepeat" type="password" placeholder="Parool uuesti">
+          <button type="submit">Registreeri</button>
+        </form>
+        <div id="registerResult" class="result"></div>
+      </section>
+
+      <section class="card">
+        <h2>5. Pildigalerii</h2>
+        <img id="mainImage" class="gallery-main" alt="Suur pilt">
+        <div id="thumbs" class="thumbs"></div>
+        <button id="nextImageButton">Järgmine pilt</button>
+      </section>
+
+      <section class="card">
+        <h2>6. Kujunduse muutja</h2>
+        <label for="themeSelect">Kujundus</label>
+        <select id="themeSelect">
+          <option value="light">Hele</option>
+          <option value="dark">Tume</option>
+        </select>
+        <label for="bgColorInput">Taustavärv</label>
+        <input id="bgColorInput" type="color" value="#f3f4f6">
+        <label for="fontSizeInput">Fondi suurus</label>
+        <input id="fontSizeInput" type="range" min="14" max="24" value="16">
+      </section>
+
+      <section class="card">
+        <h2>7. To-do list</h2>
+        <div class="row">
+          <input id="todoInput" type="text" placeholder="Lisa ülesanne">
+          <button id="addTodoButton">Lisa</button>
+        </div>
+        <ul id="todoList" class="clean"></ul>
+      </section>
+
+      <section class="card">
+        <h2>8. JSON-andmed</h2>
+        <button id="showStudentsButton">Kuva õpilased</button>
+        <table>
+          <thead>
+            <tr>
+              <th>Nimi</th>
+              <th>Hinne</th>
+            </tr>
+          </thead>
+          <tbody id="studentsTableBody"></tbody>
+        </table>
+        <div id="studentsAverage" class="message"></div>
+      </section>
+
+      <section class="card">
+        <h2>9. Mini-ilm</h2>
+        <select id="citySelect"></select>
+        <div id="weatherResult" class="result"></div>
+      </section>
+
+      <section class="card">
+        <h2>10. AJAX andmed</h2>
+        <select id="dataTypeSelect">
+          <option value="users">Kasutajad</option>
+          <option value="products">Tooted</option>
+          <option value="news">Uudised</option>
+          <option value="books">Raamatud</option>
+        </select>
+        <button id="loadDataButton">Laadi data.json</button>
+        <ul id="ajaxList" class="clean"></ul>
+      </section>
+
+      <section class="card">
+        <h2>11. Otsing ja filtreerimine</h2>
+        <input id="searchInput" type="text" placeholder="Otsi toodet">
+        <select id="categoryFilter">
+          <option value="all">Kõik kategooriad</option>
+          <option value="Tehnika">Tehnika</option>
+          <option value="Raamat">Raamat</option>
+          <option value="Toit">Toit</option>
+        </select>
+        <select id="sortSelect">
+          <option value="name">Sordi nime järgi</option>
+          <option value="price">Sordi hinna järgi</option>
+        </select>
+        <ul id="productList" class="clean"></ul>
+      </section>
+
+      <section class="card">
+        <h2>12. JavaScript vs jQuery</h2>
+        <p id="plainText" class="hidden-text">See tekst peidetakse ja tuuakse tagasi tavalise JavaScriptiga.</p>
+        <button id="togglePlainButton">Peida või näita (JS)</button>
+        <p id="jqText" class="hidden-text">See tekst käitub jQuery moodi, aga ilma jQuery teeki laadimata.</p>
+        <button id="toggleJqButton">Peida või näita (jQuery stiilis)</button>
+      </section>
+
+      <section class="card">
+        <h2>13. Lõpuülesanne: mini e-pood</h2>
+        <button id="loadShopButton">Laadi tooted</button>
+        <ul id="shopProducts" class="clean"></ul>
+        <h3>Ostukorv</h3>
+        <ul id="cartList" class="clean"></ul>
+        <div id="cartTotal" class="message">Kogusumma: 0 €</div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const students = [
+      { name: "Mari", grade: 5 },
+      { name: "Juri", grade: 3 },
+      { name: "Kati", grade: 4 }
+    ];
+
+    const weatherData = [
+      { city: "Torva", temperature: -2, condition: "Pilves" },
+      { city: "Tallinn", temperature: 1, condition: "Lumine" },
+      { city: "Tartu", temperature: 3, condition: "Selge" }
+    ];
+
+    const filterProducts = [
+      { name: "Klaviatuur", category: "Tehnika", price: 35 },
+      { name: "JavaScripti raamat", category: "Raamat", price: 22 },
+      { name: "Sokolaad", category: "Toit", price: 4 },
+      { name: "Hiir", category: "Tehnika", price: 18 }
+    ];
+
+    const galleryImages = [
+      createImage("Meri", "#60a5fa"),
+      createImage("Mets", "#34d399"),
+      createImage("Paike", "#fbbf24")
+    ];
+
+    let galleryIndex = 0;
+    let todos = JSON.parse(localStorage.getItem("todos") || "[]");
+    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    function createImage(text, color) {
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="600" height="360">
+          <rect width="100%" height="100%" fill="${color}" />
+          <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+            font-size="48" font-family="Arial" fill="white">${text}</text>
+        </svg>
+      `;
+      return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    }
+
+    function setResult(id, text, isError) {
+      const element = document.querySelector(id);
+      element.textContent = text;
+      element.className = isError ? "result error" : "result success";
+    }
+
+    document.querySelector("#greetButton").addEventListener("click", function() {
+      const name = document.querySelector("#nameInput").value.trim();
+      setResult("#greetResult", name ? "Tere, " + name + "!" : "Sisesta nimi.", !name);
+    });
+
+    document.querySelector("#calcButton").addEventListener("click", function() {
+      const a = Number(document.querySelector("#calcA").value);
+      const b = Number(document.querySelector("#calcB").value);
+      const operation = document.querySelector("#calcOperation").value;
+
+      if (Number.isNaN(a) || Number.isNaN(b)) {
+        setResult("#calcResult", "Sisesta kaks arvu.", true);
+        return;
+      }
+
+      if (operation === "/" && b === 0) {
+        setResult("#calcResult", "Nulliga jagada ei saa.", true);
+        return;
+      }
+
+      let result = 0;
+
+      if (operation === "+") result = a + b;
+      if (operation === "-") result = a - b;
+      if (operation === "*") result = a * b;
+      if (operation === "/") result = a / b;
+
+      setResult("#calcResult", "Tulemus: " + result, false);
+    });
+
+    document.querySelector("#passwordInput").addEventListener("input", function(event) {
+      const password = event.target.value;
+      let score = 0;
+
+      if (password.length >= 8) score++;
+      if (/\d/.test(password)) score++;
+      if (/[A-Z]/.test(password)) score++;
+      if (/[^A-Za-z0-9]/.test(password)) score++;
+
+      let label = "Nork";
+      if (score >= 3) label = "Keskmine";
+      if (score === 4) label = "Tugev";
+
+      setResult("#passwordResult", "Parool on: " + label, score < 2);
+    });
+
+    document.querySelector("#registerForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const name = document.querySelector("#regName").value.trim();
+      const email = document.querySelector("#regEmail").value.trim();
+      const age = Number(document.querySelector("#regAge").value);
+      const password = document.querySelector("#regPassword").value;
+      const repeat = document.querySelector("#regPasswordRepeat").value;
+
+      if (!name || !email || !document.querySelector("#regAge").value || !password || !repeat) {
+        setResult("#registerResult", "Koik valjad peavad olema taidetud.", true);
+        return;
+      }
+
+      if (!email.includes("@")) {
+        setResult("#registerResult", "E-post peab sisaldama @ marki.", true);
+        return;
+      }
+
+      if (age < 13) {
+        setResult("#registerResult", "Vanus peab olema vahemalt 13.", true);
+        return;
+      }
+
+      if (password !== repeat) {
+        setResult("#registerResult", "Paroolid ei kattu.", true);
+        return;
+      }
+
+      setResult("#registerResult", "Registreerimine onnistus.", false);
+    });
+
+    function renderGallery() {
+      const mainImage = document.querySelector("#mainImage");
+      const thumbs = document.querySelector("#thumbs");
+
+      mainImage.src = galleryImages[galleryIndex];
+      thumbs.innerHTML = "";
+
+      galleryImages.forEach(function(image, index) {
+        const thumb = document.createElement("img");
+        thumb.src = image;
+        thumb.alt = "Pilt " + (index + 1);
+        if (index === galleryIndex) {
+          thumb.classList.add("active");
+        }
+        thumb.addEventListener("click", function() {
+          galleryIndex = index;
+          renderGallery();
+        });
+        thumbs.appendChild(thumb);
+      });
+    }
+
+    document.querySelector("#nextImageButton").addEventListener("click", function() {
+      galleryIndex = (galleryIndex + 1) % galleryImages.length;
+      renderGallery();
+    });
+
+    function applyTheme() {
+      const savedTheme = localStorage.getItem("theme") || "light";
+      const savedColor = localStorage.getItem("bgColor") || "#f3f4f6";
+      const savedFontSize = localStorage.getItem("fontSize") || "16";
+
+      document.body.classList.toggle("dark", savedTheme === "dark");
+      document.body.style.backgroundColor = savedColor;
+      document.body.style.fontSize = savedFontSize + "px";
+
+      document.querySelector("#themeSelect").value = savedTheme;
+      document.querySelector("#bgColorInput").value = savedColor;
+      document.querySelector("#fontSizeInput").value = savedFontSize;
+    }
+
+    document.querySelector("#themeSelect").addEventListener("change", function(event) {
+      localStorage.setItem("theme", event.target.value);
+      applyTheme();
+    });
+
+    document.querySelector("#bgColorInput").addEventListener("input", function(event) {
+      localStorage.setItem("bgColor", event.target.value);
+      applyTheme();
+    });
+
+    document.querySelector("#fontSizeInput").addEventListener("input", function(event) {
+      localStorage.setItem("fontSize", event.target.value);
+      applyTheme();
+    });
+
+    function saveTodos() {
+      localStorage.setItem("todos", JSON.stringify(todos));
+    }
+
+    function renderTodos() {
+      const todoList = document.querySelector("#todoList");
+      todoList.innerHTML = "";
+
+      todos.forEach(function(todo, index) {
+        const li = document.createElement("li");
+        if (todo.done) {
+          li.classList.add("done");
+        }
+
+        const text = document.createElement("span");
+        text.textContent = todo.text;
+        text.addEventListener("click", function() {
+          todos[index].done = !todos[index].done;
+          saveTodos();
+          renderTodos();
+        });
+
+        const removeButton = document.createElement("button");
+        removeButton.textContent = "Kustuta";
+        removeButton.addEventListener("click", function() {
+          todos.splice(index, 1);
+          saveTodos();
+          renderTodos();
+        });
+
+        li.appendChild(text);
+        li.appendChild(removeButton);
+        todoList.appendChild(li);
+      });
+    }
+
+    document.querySelector("#addTodoButton").addEventListener("click", function() {
+      const input = document.querySelector("#todoInput");
+      const text = input.value.trim();
+
+      if (!text) {
+        return;
+      }
+
+      todos.push({ text: text, done: false });
+      input.value = "";
+      saveTodos();
+      renderTodos();
+    });
+
+    document.querySelector("#showStudentsButton").addEventListener("click", function() {
+      const body = document.querySelector("#studentsTableBody");
+      const filtered = students.filter(function(student) {
+        return student.grade >= 4;
+      });
+      const average = students.reduce(function(sum, student) {
+        return sum + student.grade;
+      }, 0) / students.length;
+
+      body.innerHTML = "";
+      filtered.forEach(function(student) {
+        const row = document.createElement("tr");
+        row.innerHTML = "<td>" + student.name + "</td><td>" + student.grade + "</td>";
+        body.appendChild(row);
+      });
+
+      document.querySelector("#studentsAverage").textContent = "Keskmine hinne: " + average.toFixed(2);
+    });
+
+    function renderWeatherOptions() {
+      const select = document.querySelector("#citySelect");
+      select.innerHTML = "";
+
+      weatherData.forEach(function(item) {
+        const option = document.createElement("option");
+        option.value = item.city;
+        option.textContent = item.city;
+        select.appendChild(option);
+      });
+
+      showWeather();
+    }
+
+    function showWeather() {
+      const city = document.querySelector("#citySelect").value;
+      const item = weatherData.find(function(weather) {
+        return weather.city === city;
+      });
+
+      if (!item) {
+        return;
+      }
+
+      document.querySelector("#weatherResult").textContent =
+        item.city + ": " + item.temperature + " C, " + item.condition;
+    }
+
+    document.querySelector("#citySelect").addEventListener("change", showWeather);
+
+    async function loadAjaxData() {
+      const list = document.querySelector("#ajaxList");
+      const type = document.querySelector("#dataTypeSelect").value;
+      list.innerHTML = "<li>Laen andmeid...</li>";
+
+      try {
+        const response = await fetch("./data.json");
+        const data = await response.json();
+
+        list.innerHTML = "";
+        data[type].forEach(function(item) {
+          const li = document.createElement("li");
+          li.textContent = typeof item === "string" ? item : JSON.stringify(item);
+          list.appendChild(li);
+        });
+      } catch (error) {
+        list.innerHTML = "<li>data.json laadimine ebaonnestus. Ava leht lokaalses serveris.</li>";
+      }
+    }
+
+    document.querySelector("#loadDataButton").addEventListener("click", loadAjaxData);
+
+    function renderProducts() {
+      const search = document.querySelector("#searchInput").value.toLowerCase();
+      const category = document.querySelector("#categoryFilter").value;
+      const sortBy = document.querySelector("#sortSelect").value;
+
+      let items = filterProducts.filter(function(product) {
+        const matchesName = product.name.toLowerCase().includes(search);
+        const matchesCategory = category === "all" || product.category === category;
+        return matchesName && matchesCategory;
+      });
+
+      items.sort(function(a, b) {
+        if (sortBy === "price") {
+          return a.price - b.price;
+        }
+        return a.name.localeCompare(b.name);
+      });
+
+      const list = document.querySelector("#productList");
+      list.innerHTML = "";
+
+      items.forEach(function(product) {
+        const li = document.createElement("li");
+        li.textContent = product.name + " - " + product.category + " - " + product.price + " EUR";
+        list.appendChild(li);
+      });
+    }
+
+    document.querySelector("#searchInput").addEventListener("input", renderProducts);
+    document.querySelector("#categoryFilter").addEventListener("change", renderProducts);
+    document.querySelector("#sortSelect").addEventListener("change", renderProducts);
+
+    document.querySelector("#togglePlainButton").addEventListener("click", function() {
+      document.querySelector("#plainText").classList.toggle("is-hidden");
+    });
+
+    function $(selector) {
+      return document.querySelector(selector);
+    }
+
+    document.querySelector("#toggleJqButton").addEventListener("click", function() {
+      $("#jqText").classList.toggle("is-hidden");
+    });
+
+    function saveCart() {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+
+    function renderCart() {
+      const cartList = document.querySelector("#cartList");
+      cartList.innerHTML = "";
+
+      let total = 0;
+
+      cart.forEach(function(item, index) {
+        total += item.price;
+
+        const li = document.createElement("li");
+        li.textContent = item.name + " - " + item.price + " EUR";
+
+        const removeButton = document.createElement("button");
+        removeButton.textContent = "Eemalda";
+        removeButton.addEventListener("click", function() {
+          cart.splice(index, 1);
+          saveCart();
+          renderCart();
+        });
+
+        li.appendChild(removeButton);
+        cartList.appendChild(li);
+      });
+
+      document.querySelector("#cartTotal").textContent = "Kogusumma: " + total + " EUR";
+    }
+
+    async function loadShop() {
+      const list = document.querySelector("#shopProducts");
+      list.innerHTML = "<li>Laen tooteid...</li>";
+
+      try {
+        const response = await fetch("./data.json");
+        const data = await response.json();
+        list.innerHTML = "";
+
+        data.products.forEach(function(product) {
+          const li = document.createElement("li");
+          li.textContent = product.name + " - " + product.price + " EUR";
+
+          const button = document.createElement("button");
+          button.textContent = "Lisa ostukorvi";
+          button.addEventListener("click", function() {
+            cart.push(product);
+            saveCart();
+            renderCart();
+          });
+
+          li.appendChild(button);
+          list.appendChild(li);
+        });
+      } catch (error) {
+        list.innerHTML = "<li>Tooteid ei saanud laadida. Ava leht lokaalses serveris.</li>";
+      }
+    }
+
+    document.querySelector("#loadShopButton").addEventListener("click", loadShop);
+
+    renderGallery();
+    applyTheme();
+    renderTodos();
+    renderWeatherOptions();
+    renderProducts();
+    renderCart();
+  </script>
+</body>
+</html>
