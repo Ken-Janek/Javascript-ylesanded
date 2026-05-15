@@ -158,6 +158,7 @@
       gap: 8px;
       padding: 8px 0;
       border-bottom: 1px solid var(--border);
+      overflow-wrap: anywhere;
     }
 
     li.done span {
@@ -282,6 +283,7 @@
           <tbody id="studentsTableBody"></tbody>
         </table>
         <div id="studentsAverage" class="message"></div>
+        <div id="studentsTop" class="message"></div>
       </section>
 
       <section class="card">
@@ -340,7 +342,7 @@
   <script>
     const students = [
       { name: "Mari", grade: 5 },
-      { name: "Juri", grade: 3 },
+      { name: "Jüri", grade: 3 },
       { name: "Kati", grade: 4 }
     ];
 
@@ -570,7 +572,7 @@
 
     document.querySelector("#showStudentsButton").addEventListener("click", function() {
       const body = document.querySelector("#studentsTableBody");
-      const filtered = students.filter(function(student) {
+      const topStudents = students.filter(function(student) {
         return student.grade >= 4;
       });
       const average = students.reduce(function(sum, student) {
@@ -578,13 +580,17 @@
       }, 0) / students.length;
 
       body.innerHTML = "";
-      filtered.forEach(function(student) {
+      students.forEach(function(student) {
         const row = document.createElement("tr");
         row.innerHTML = "<td>" + student.name + "</td><td>" + student.grade + "</td>";
         body.appendChild(row);
       });
 
       document.querySelector("#studentsAverage").textContent = "Keskmine hinne: " + average.toFixed(2);
+      document.querySelector("#studentsTop").textContent =
+        "Hinne 4 või rohkem: " + topStudents.map(function(student) {
+          return student.name;
+        }).join(", ");
     });
 
     function renderWeatherOptions() {
@@ -617,6 +623,26 @@
 
     document.querySelector("#citySelect").addEventListener("change", showWeather);
 
+    function formatAjaxItem(type, item) {
+      if (type === "users") {
+        return item;
+      }
+
+      if (type === "products") {
+        return item.name + " - " + item.price + " EUR - " + item.category;
+      }
+
+      if (type === "news") {
+        return item;
+      }
+
+      if (type === "books") {
+        return item.title + " - " + item.genre;
+      }
+
+      return typeof item === "string" ? item : JSON.stringify(item);
+    }
+
     async function loadAjaxData() {
       const list = document.querySelector("#ajaxList");
       const type = document.querySelector("#dataTypeSelect").value;
@@ -629,7 +655,7 @@
         list.innerHTML = "";
         data[type].forEach(function(item) {
           const li = document.createElement("li");
-          li.textContent = typeof item === "string" ? item : JSON.stringify(item);
+          li.textContent = formatAjaxItem(type, item);
           list.appendChild(li);
         });
       } catch (error) {
